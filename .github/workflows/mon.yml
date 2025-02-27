@@ -23,9 +23,9 @@ jobs:
           javac App.java
           java App
         env:
-          KEYWORD: ${{ vars.KEYWORD }}
-          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
-          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
 
       - name: 실행 결과로 나온 파일을 커밋
         uses: EndBug/add-and-commit@v9

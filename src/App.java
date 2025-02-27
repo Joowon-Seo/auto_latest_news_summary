@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -176,19 +177,26 @@ public class App {
 			String summary) {
 		// 현재 시간을 "YYYY년 MM월 DD일 HH시 MM분" 형식으로 변환
 		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-				"yyyy년 MM월 dd일 HH시 mm분");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
 		String dateStr = now.format(formatter);
-		String fileName = "latest_ai_news_" + dateStr + ".md";
+
+		// "news" 디렉토리에 저장
+		String directory = "news";
+		File dir = new File(directory);
+		if (!dir.exists()) {
+			dir.mkdirs(); // 디렉토리가 없으면 생성
+		}
+
+		String fileName = directory + "/latest_ai_news_" + dateStr + ".md";
 		String markdownContent = """
-				# 최신 AI 뉴스 요약
-				
-				## 원본 뉴스
-				%s
-				
-				## 요약
-				%s
-				""".formatted(newsContent, summary);
+                # 최신 AI 뉴스 요약
+                
+                ## 원본 뉴스
+                %s
+                
+                ## 요약
+                %s
+                """.formatted(newsContent, summary);
 
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
 			writer.write(markdownContent);

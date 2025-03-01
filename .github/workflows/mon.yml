@@ -1,4 +1,4 @@
-name: ${{ format('{0} AI 뉴스 요약', steps.date.outputs.date) }}
+name: AI 뉴스 요약
 
 on:
   workflow_dispatch:

@@ -1,14 +1,21 @@
-name: 자동 모니터링
+name: ${{ format('{0} AI 뉴스 요약', steps.date.outputs.date) }}
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/5 * * * *"  # 매 5분마다 실행 (보장 안됨)
+    - cron: "0 0 * * *"  # 매일 자정(UTC), 한국 시간 오전 9시
+
+permissions:
+  contents: write
 
 jobs:
   make-file:
     runs-on: ubuntu-latest
     steps:
+      - name: 날짜 설정
+        id: date
+        run: echo "date=$(TZ='Asia/Seoul' date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
       - name: 저장소에 있는 파일 불러오기
         uses: actions/checkout@v4
 
@@ -20,8 +27,8 @@ jobs:
 
       - name: 컴파일 및 코드 실행
         run: |
-          javac src/App.java   # src 폴더 내의 App.java 컴파일
-          java -cp src App     # src 폴더에서 App 클래스 실행
+          javac src/App.java
+          java -cp src App
         env:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
@@ -32,5 +39,5 @@ jobs:
         with:
           author_name: ${{ github.actor }}
           author_email: ${{ github.actor }}@users.noreply.github.com
-          message: "모니터링 파일 저장"
+          message: "${{ steps.date.outputs.date }} AI 뉴스 요약"
           add: "."
